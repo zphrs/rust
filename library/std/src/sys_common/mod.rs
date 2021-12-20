@@ -16,6 +16,7 @@
 
 #![allow(missing_docs)]
 #![allow(missing_debug_implementations)]
+#![allow(warnings)]
 
 #[cfg(test)]
 mod tests;
@@ -44,6 +45,8 @@ cfg_if::cfg_if! {
 
 cfg_if::cfg_if! {
     if #[cfg(any(target_os = "l4re",
+                 target_os = "hermit",
+                 target_os = "twizzler",
                  feature = "restricted-std",
                  all(target_family = "wasm", not(target_os = "emscripten")),
                  target_os = "xous",

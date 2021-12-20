@@ -105,6 +105,8 @@ miniz_oxide.debug = 0
 object.debug = 0
 
 [patch.crates-io]
+libc = { path = "libc" }
+
 # See comments in `library/rustc-std-workspace-core/README.md` for what's going on
 # here
 rustc-std-workspace-core = { path = 'library/rustc-std-workspace-core' }

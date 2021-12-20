@@ -23,6 +23,7 @@
 #![panic_runtime]
 #![feature(panic_runtime)]
 #![feature(c_unwind)]
+#![allow(warnings)]
 // `real_imp` is unused with Miri, so silence warnings.
 #![cfg_attr(miri, allow(dead_code))]
 #![allow(internal_features)]
@@ -50,6 +51,7 @@ cfg_if::cfg_if! {
         all(target_family = "windows", target_env = "gnu"),
         target_os = "psp",
         target_os = "solid_asp3",
+        target_os = "twizzler",
         all(target_family = "unix", not(target_os = "espidf")),
         all(target_vendor = "fortanix", target_env = "sgx"),
     ))] {

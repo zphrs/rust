@@ -45,7 +45,19 @@ fortanix-sgx-abi = { version = "0.5.0", features = ['rustc-dep-of-std'], public 
 [target.'cfg(target_os = "hermit")'.dependencies]
 hermit-abi = { version = "0.3.2", features = ['rustc-dep-of-std'], public = true }
 
+<<<<<<< HEAD
 [target.'cfg(target_os = "wasi")'.dependencies]
+=======
+[target.'cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "twizzler"))'.dependencies]
+#twizzler-abi = { git = "https://github.com/dbittman/twizzler-abi", features = ['rustc-dep-of-std'], default-features = false }
+twizzler-abi = { path="../twizzler-abi", features = ['rustc-dep-of-std'], default-features = false }
+
+[target.'cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "twizzler"))'.dependencies.compiler_builtins]
+features = [ "mem" ]
+version = "0.1.71"
+
+[target.wasm32-wasi.dependencies]
+>>>>>>> 4266b3ae96b... Implement support for the Twizzler Operating System.
 wasi = { version = "0.11.0", features = ['rustc-dep-of-std'], default-features = false }
 
 [features]

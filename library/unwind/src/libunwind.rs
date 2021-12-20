@@ -103,7 +103,10 @@ pub type _Unwind_Exception_Cleanup_Fn =
 // and RFC 2841
 #[cfg_attr(
     any(
-        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux")),
+        all(
+            feature = "llvm-libunwind",
+            any(target_os = "fuchsia", target_os = "linux", target_os = "twizzler")
+        ),
         all(target_os = "windows", target_env = "gnu", target_abi = "llvm")
     ),
     link(name = "unwind", kind = "static", modifiers = "-bundle")
@@ -134,7 +137,7 @@ if #[cfg(any(target_os = "ios", target_os = "tvos", target_os = "watchos", targe
     pub use _Unwind_Action::*;
 
     #[cfg_attr(
-        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux")),
+        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux", target_os = "twizzler")),
         link(name = "unwind", kind = "static", modifiers = "-bundle")
     )]
     extern "C" {
@@ -258,7 +261,7 @@ cfg_if::cfg_if! {
 if #[cfg(not(all(target_os = "ios", target_arch = "arm")))] {
     // Not 32-bit iOS
     #[cfg_attr(
-        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux")),
+        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux", target_os = "twizzler")),
         link(name = "unwind", kind = "static", modifiers = "-bundle")
     )]
     extern "C-unwind" {

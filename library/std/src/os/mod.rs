@@ -2,7 +2,7 @@
 
 #![stable(feature = "os", since = "1.0.0")]
 #![allow(missing_docs, nonstandard_style, missing_debug_implementations)]
-
+#![allow(warnings)]
 pub mod raw;
 
 // The code below could be written clearer using `cfg_if!`. However, the items below are
@@ -142,6 +142,8 @@ pub mod solid;
 pub(crate) mod tvos;
 #[cfg(target_os = "vita")]
 pub mod vita;
+#[cfg(target_os = "twizzler")]
+pub mod twizzler;
 #[cfg(target_os = "vxworks")]
 pub mod vxworks;
 #[cfg(target_os = "watchos")]
