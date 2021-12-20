@@ -81,6 +81,7 @@ mod redox_base;
 mod solaris_base;
 mod solid_base;
 mod thumb_base;
+mod twizzler_base;
 mod uefi_msvc_base;
 mod vxworks_base;
 mod wasm_base;
@@ -1140,6 +1141,7 @@ supported_targets! {
     ("x86_64-unknown-none", x86_64_unknown_none),
 
     ("mips64-openwrt-linux-musl", mips64_openwrt_linux_musl),
+    ("x86_64-unknown-twizzler", x86_64_unknown_twizzler),
 }
 
 /// Cow-Vec-Str: Cow<'static, [Cow<'static, str>]>

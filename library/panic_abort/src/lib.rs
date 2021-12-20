@@ -14,6 +14,7 @@
 #![feature(staged_api)]
 #![feature(rustc_attrs)]
 #![feature(c_unwind)]
+#![allow(warnings)]
 
 #[cfg(target_os = "android")]
 mod android;
@@ -42,6 +43,8 @@ pub unsafe fn __rust_start_panic(_payload: *mut &mut dyn BoxMeUp) -> u32 {
                 libc::abort();
             }
         } else if #[cfg(any(target_os = "hermit",
+                            target_os = "twizzler",
+                            target_os = "solid_asp3",
                             all(target_vendor = "fortanix", target_env = "sgx")
         ))] {
             unsafe fn abort() -> ! {

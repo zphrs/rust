@@ -5,6 +5,7 @@
 #![feature(c_unwind)]
 #![feature(cfg_target_abi)]
 #![cfg_attr(not(target_env = "msvc"), feature(libc))]
+#![allow(warnings)]
 
 cfg_if::cfg_if! {
     if #[cfg(target_env = "msvc")] {
@@ -21,6 +22,7 @@ cfg_if::cfg_if! {
         windows,
         target_os = "psp",
         target_os = "solid_asp3",
+        target_os = "twizzler",
         all(target_vendor = "fortanix", target_env = "sgx"),
     ))] {
         mod libunwind;
