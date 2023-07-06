@@ -1288,18 +1288,18 @@ impl Step for Libunwind {
                 cfg.define("_LIBUNWIND_IS_BAREMETAL", None);
                 cfg.define("_LIBUNWIND_HAS_NO_THREADS", None);
                 cfg.define("_LIBUNWIND_REMEMBER_STACK_ALLOC", None);
-
                 // FIXME (dbittman): This is a hack to get bootstrap headers included when compiling libunwind.
                 // We build clang as part of building llvm when bootstrapping the Twizzler toolchain,
                 // but it will be unable to find any libc headers (since there aren't any). Fortunately,
                 // libunwind is the only part of the Twizzler toolchain build that needs system headers,
                 // it needs very few. So we just provide some hacky ones.
+                cfg.flag("-nostdlibinc");
                 let mut bootstrap_path = root.clone();
                 bootstrap_path.push("../../../../bootstrap-include");
                 cfg.include(bootstrap_path);
                 cfg.define("__ELF__", None);
                 cfg.define("NDEBUG", None);
-                cfg.define("_LIBUNWIND_NO_HEAP", None);
+                cfg.define("_LIBUNWIND_NO_HEAP", None);                
             }
             if self.target.contains("windows") {
                 cfg.define("_LIBUNWIND_HIDE_SYMBOLS", "1");
