@@ -1234,6 +1234,10 @@ impl Step for CrtBeginEnd {
             .file(crtbegin_src)
             .file(crtend_src);
 
+        if self.target.contains("twizzler") {
+            cfg.flag("-nostdlibinc");
+        }
+
         // Those flags are defined in src/llvm-project/compiler-rt/lib/crt/CMakeLists.txt
         // Currently only consumer of those objects is musl, which use .init_array/.fini_array
         // instead of .ctors/.dtors
@@ -1334,6 +1338,7 @@ impl Step for Libunwind {
                 // but it will be unable to find any libc headers (since there aren't any). Fortunately,
                 // libunwind is the only part of the Twizzler toolchain build that needs system headers,
                 // it needs very few. So we just provide some hacky ones.
+                cfg.flag("-nostdlibinc");
                 let mut bootstrap_path = root.clone();
                 bootstrap_path.push("../../../../bootstrap-include");
                 cfg.include(bootstrap_path);
