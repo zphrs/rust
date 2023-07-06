@@ -155,6 +155,11 @@ than building it.
             continue;
         }
 
+        // On Twizzler, the C compiler is build as part of the llvm build for rustc.
+        if target.contains("twizzler") {
+            continue;
+        }
+
         if !build.config.dry_run {
             cmd_finder.must_have(build.cc(*target));
             if let Some(ar) = build.ar(*target) {
