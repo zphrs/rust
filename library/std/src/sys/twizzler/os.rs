@@ -165,7 +165,7 @@ pub fn home_dir() -> Option<PathBuf> {
 
 pub fn exit(code: i32) -> ! {
     // TODO: need to kill all our threads too.
-    twizzler_abi::syscall::sys_thread_exit(code as u64, crate::ptr::null_mut());
+    twizzler_abi::syscall::sys_thread_exit(code as u64);
 }
 
 pub fn getpid() -> u32 {
