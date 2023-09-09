@@ -54,14 +54,14 @@ where
 
 impl fmt::Display for JoinPathsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        "not supported on hermit yet".fmt(f)
+        "not supported on twizzler yet".fmt(f)
     }
 }
 
 impl StdError for JoinPathsError {
     #[allow(deprecated)]
     fn description(&self) -> &str {
-        "not supported on hermit yet"
+        "not supported on twizzler yet"
     }
 }
 

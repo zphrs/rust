@@ -1,19 +1,15 @@
 use crate::spec::{
-    crt_objects, LinkArgs, LinkOutputKind, LinkerFlavor, LldFlavor, PanicStrategy, TargetOptions,
-    TlsModel,
+    crt_objects, LinkArgs, LinkOutputKind, LinkerFlavor, PanicStrategy, TargetOptions, TlsModel,
 };
 
 pub fn opts() -> TargetOptions {
     let mut pre_link_args = LinkArgs::new();
-    pre_link_args.insert(
-        LinkerFlavor::Lld(LldFlavor::Ld),
-        vec!["--build-id".into(), "--hash-style=gnu".into(), "--Bstatic".into()],
-    );
+    pre_link_args.insert(LinkerFlavor::Gcc, vec![]);
 
     TargetOptions {
         os: "twizzler".into(),
-        linker_flavor: LinkerFlavor::Lld(LldFlavor::Ld),
-        linker: Some("rust-lld".into()),
+        linker_flavor: LinkerFlavor::Gcc,
+        linker: Some("clang".into()),
         executables: true,
         pre_link_args,
         pre_link_objects: crt_objects::new(&[
@@ -32,9 +28,10 @@ pub fn opts() -> TargetOptions {
         position_independent_executables: false,
         static_position_independent_executables: false,
         tls_model: TlsModel::InitialExec,
-        crt_static_default: true,
+        crt_static_default: false,
         crt_static_respected: true,
-        dynamic_linking: false,
+        crt_static_allows_dylibs: true,
+        dynamic_linking: true,
         has_thread_local: true,
         ..Default::default()
     }

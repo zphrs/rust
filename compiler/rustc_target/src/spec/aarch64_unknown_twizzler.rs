@@ -1,4 +1,4 @@
-use crate::spec::{Target, TargetOptions};
+use crate::spec::{LinkerFlavor, Target, TargetOptions};
 
 const LINKER_SCRIPT: &str = include_str!("./aarch64_unknown_twizzler_linker_script.ld");
 
@@ -10,6 +10,12 @@ pub fn target() -> Target {
     //   - should be in stable llvm 16 mar 2022
     // base.stack_probes = StackProbeType::Call;
 
+    let mut base = super::twizzler_base::opts();
+    base.pre_link_args
+        .get_mut(&LinkerFlavor::Gcc)
+        .unwrap()
+        .push("--target=aarch64-unknown-twizzler".into());
+
     Target {
         llvm_target: "aarch64-unknown-twizzler".into(),
         pointer_width: 64,
@@ -19,7 +25,7 @@ pub fn target() -> Target {
             max_atomic_width: Some(128),
             // this option requires linkers where `linker_is_gnu` is true.
             link_script: Some(LINKER_SCRIPT.into()),
-            ..super::twizzler_base::opts()
+            ..base
         },
     }
 }
