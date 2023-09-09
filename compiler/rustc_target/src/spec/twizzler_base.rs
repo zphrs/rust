@@ -1,5 +1,6 @@
 use crate::spec::{
-    crt_objects, LinkArgs, LinkOutputKind, LinkerFlavor, PanicStrategy, TargetOptions, TlsModel,
+    crt_objects, LinkArgs, LinkOutputKind, LinkerFlavor, LldFlavor, PanicStrategy, TargetOptions,
+    TlsModel,
 };
 
 pub fn opts() -> TargetOptions {
@@ -8,8 +9,8 @@ pub fn opts() -> TargetOptions {
 
     TargetOptions {
         os: "twizzler".into(),
-        linker_flavor: LinkerFlavor::Gcc,
-        linker: Some("clang".into()),
+        linker_flavor: LinkerFlavor::Lld(LldFlavor::Ld),
+        linker: Some("rust-lld".into()),
         executables: true,
         pre_link_args,
         pre_link_objects: crt_objects::new(&[
