@@ -5062,6 +5062,7 @@ dependencies = [
  "rustc-demangle",
  "std_detect",
  "twizzler-abi",
+ "twizzler-runtime-api",
  "unwind",
  "wasi",
 ]
@@ -5626,6 +5627,15 @@ dependencies = [
  "bitflags",
  "compiler_builtins",
  "libc",
+ "rustc-std-workspace-alloc",
+ "rustc-std-workspace-core",
+]
+
+[[package]]
+name = "twizzler-runtime-api"
+version = "0.1.0"
+dependencies = [
+ "compiler_builtins",
  "rustc-std-workspace-core",
 ]
 

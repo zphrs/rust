@@ -1775,10 +1775,8 @@ fn add_post_link_objects(
 /// Add arbitrary "pre-link" args defined by the target spec or from command line.
 /// FIXME: Determine where exactly these args need to be inserted.
 fn add_pre_link_args(cmd: &mut dyn Linker, sess: &Session, flavor: LinkerFlavor) {
-    eprintln!("====> linker flavor: {:?} :: {:?}", flavor, std::env::var("PATH"));
     if let Some(args) = sess.target.pre_link_args.get(&flavor) {
         cmd.args(args.iter().map(Deref::deref));
-        cmd.arg("-v");
     }
     cmd.args(&sess.opts.unstable_opts.pre_link_args);
 }
