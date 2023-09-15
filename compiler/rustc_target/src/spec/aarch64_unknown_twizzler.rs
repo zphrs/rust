@@ -10,7 +10,7 @@ pub fn target() -> Target {
     //   - should be in stable llvm 16 mar 2022
     // base.stack_probes = StackProbeType::Call;
 
-    let mut base = super::twizzler_base::opts();
+    let mut base = super::twizzler_base::opts(false);
     base.pre_link_args
         .get_mut(&LinkerFlavor::Gcc)
         .unwrap()

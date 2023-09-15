@@ -3,7 +3,7 @@ use crate::spec::{LinkerFlavor, StackProbeType, Target};
 const LINKER_SCRIPT: &str = include_str!("./x86_64_unknown_twizzler_linker_script.ld");
 
 pub fn target() -> Target {
-    let mut base = super::twizzler_base::opts();
+    let mut base = super::twizzler_base::opts(false);
     base.cpu = "x86-64".into();
     base.max_atomic_width = Some(64);
     base.features = "+rdrnd,+rdseed".into();

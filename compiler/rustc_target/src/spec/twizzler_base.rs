@@ -3,7 +3,7 @@ use crate::spec::{
     TlsModel,
 };
 
-pub fn opts() -> TargetOptions {
+pub fn opts(static_only: bool) -> TargetOptions {
     let mut pre_link_args = LinkArgs::new();
     pre_link_args.insert(LinkerFlavor::Gcc, vec![]);
 
@@ -26,13 +26,13 @@ pub fn opts() -> TargetOptions {
             (LinkOutputKind::StaticPicExe, &["crtendS.o", "crtn.o"]),
         ]),
         panic_strategy: PanicStrategy::Unwind,
-        position_independent_executables: true,
-        static_position_independent_executables: true,
-        tls_model: TlsModel::GeneralDynamic,
-        crt_static_default: false,
-        crt_static_respected: true,
-        crt_static_allows_dylibs: true,
-        dynamic_linking: true,
+        position_independent_executables: !static_only,
+        static_position_independent_executables: !static_only,
+        tls_model: if static_only { TlsModel::LocalExec } else { TlsModel::GeneralDynamic },
+        crt_static_default: static_only,
+        crt_static_respected: !static_only,
+        crt_static_allows_dylibs: !static_only,
+        dynamic_linking: !static_only,
         has_thread_local: true,
         ..Default::default()
     }
