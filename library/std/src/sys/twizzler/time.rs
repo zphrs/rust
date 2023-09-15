@@ -10,7 +10,8 @@ pub const UNIX_EPOCH: SystemTime = SystemTime(Duration::from_secs(0));
 
 impl Instant {
     pub fn now() -> Instant {
-        Instant(twizzler_abi::time::get_monotonic())
+        let runtime = twizzler_runtime_api::get_runtime();
+        Instant(runtime.get_monotonic())
     }
 
     #[allow(dead_code)]
@@ -38,7 +39,8 @@ impl Instant {
 
 impl SystemTime {
     pub fn now() -> SystemTime {
-        SystemTime(twizzler_abi::time::get_systemtime())
+        let runtime = twizzler_runtime_api::get_runtime();
+        SystemTime(runtime.get_system_time())
     }
 
     pub fn sub_time(&self, other: &SystemTime) -> Result<Duration, Duration> {

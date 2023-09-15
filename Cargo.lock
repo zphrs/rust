@@ -1586,7 +1586,7 @@ dependencies = [
  "proc-macro-error",
  "proc-macro2",
  "quote",
- "syn 1.0.91",
+ "syn",
 ]
 
 [[package]]
@@ -5061,7 +5061,6 @@ dependencies = [
  "rand_xorshift",
  "rustc-demangle",
  "std_detect",
- "twizzler-abi",
  "twizzler-runtime-api",
  "unwind",
  "wasi",
@@ -5635,6 +5634,7 @@ dependencies = [
 name = "twizzler-runtime-api"
 version = "0.1.0"
 dependencies = [
+ "bitflags",
  "compiler_builtins",
  "rustc-std-workspace-core",
 ]

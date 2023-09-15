@@ -71,7 +71,8 @@ pub extern "C" fn floor(x: f64) -> f64 {
 
 #[inline]
 pub fn abort_internal() -> ! {
-    twizzler_abi::abort();
+    let runtime = twizzler_runtime_api::get_runtime();
+    runtime.abort()
 }
 
 // This function is needed by the panic runtime. The symbol is named in
@@ -107,17 +108,22 @@ pub fn hashmap_random_keys() -> (u64, u64) {
 #[no_mangle]
 #[allow(unreachable_code)]
 #[allow(unused_variables)]
-pub unsafe extern "C" fn std_runtime_start(
-    argc: usize,
-    args: *const *const i8,
-    env: *const *const i8,
-) -> i32 {
+pub unsafe extern "C" fn std_entry_from_runtime(
+    aux: twizzler_runtime_api::BasicAux,
+) -> twizzler_runtime_api::BasicReturn {
     extern "C" {
         fn main(argc: isize, argv: *const *const c_char) -> i32;
     }
-    crate::sys::os::init_environment(env);
-    twizzler_abi::ready();
-    let code = main(argc as isize, args);
+
+    crate::sys::os::init_environment(aux.env);
+    let runtime = twizzler_runtime_api::get_runtime();
+
+    runtime.pre_main_hook();
+
+    let code = main(aux.argc as isize, aux.args);
     thread_local_dtor::run_dtors();
-    code
+
+    runtime.post_main_hook();
+
+    twizzler_runtime_api::BasicReturn { code }
 }

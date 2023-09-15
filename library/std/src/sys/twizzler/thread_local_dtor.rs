@@ -15,7 +15,7 @@ type List = Vec<(*mut u8, unsafe extern "C" fn(*mut u8))>;
 
 pub unsafe fn register_dtor(t: *mut u8, dtor: unsafe extern "C" fn(*mut u8)) {
     if DTORS.get().is_null() {
-        let v: Box<List> = box Vec::new();
+        let v: Box<List> = Box::new(Vec::new());
         DTORS.set(Box::into_raw(v));
     }
 
