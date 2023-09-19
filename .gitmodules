@@ -47,4 +47,4 @@
 [submodule "libc"]
 	path = libc
 	url = ../libc.git
-	branch = twizzler-adv
+	branch = twizzler-dynlink
