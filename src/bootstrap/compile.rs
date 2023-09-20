@@ -248,7 +248,7 @@ fn copy_third_party_objects(
         /* TODO (twizzler): is this the correct place to do this? These files don't seem to
         get copied in otherwise, and we need them, since they aren't provided elsewhere for us. */
         let libdir_path = builder.sysroot_libdir(*compiler, target);
-        let crt_path = builder.ensure(native::CrtBeginEnd { target });
+        let crt_path = builder.ensure(llvm::CrtBeginEnd { target });
         for &obj in &["crtbegin.o", "crtbeginS.o", "crtend.o", "crtendS.o"] {
             let src = crt_path.join(obj);
             let target = libdir_path.join(obj);

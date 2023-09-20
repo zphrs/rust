@@ -44,14 +44,9 @@ pub unsafe fn __rust_start_panic(_payload: &mut dyn BoxMeUp) -> u32 {
                 libc::abort();
             }
         } else if #[cfg(any(target_os = "hermit",
-<<<<<<< HEAD
+                            target_os = "twizzler",
                             all(target_vendor = "fortanix", target_env = "sgx"),
                             target_os = "xous"
-=======
-                            target_os = "twizzler",
-                            target_os = "solid_asp3",
-                            all(target_vendor = "fortanix", target_env = "sgx")
->>>>>>> 4266b3ae96b... Implement support for the Twizzler Operating System.
         ))] {
             unsafe fn abort() -> ! {
                 // call std::sys::abort_internal
