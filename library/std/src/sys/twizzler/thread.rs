@@ -33,7 +33,7 @@ impl Thread {
 
         unsafe extern "C" fn thread_start(main: usize) -> ! {
             // TODO (urgent): does this leak p?
-            Box::from_raw(main as *mut Box<dyn FnOnce()>)();
+            Box::from_raw(core::ptr::from_exposed_addr_mut::<Box<dyn FnOnce()>>(main))();
             run_dtors();
             let runtime = twizzler_runtime_api::get_runtime();
             runtime.exit(0);

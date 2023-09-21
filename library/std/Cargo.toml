@@ -46,7 +46,7 @@ fortanix-sgx-abi = { version = "0.5.0", features = ['rustc-dep-of-std'], public 
 hermit-abi = { version = "0.3.2", features = ['rustc-dep-of-std'], public = true }
 
 [target.'cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "twizzler"))'.dependencies]
-twizzler-runtime-api = { path = "../twizzler-runtime-api" }
+twizzler-runtime-api = { path = "../twizzler-runtime-api", features = ["rustc-dep-of-std"] }
 
 [target.'cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "twizzler"))'.dependencies.compiler_builtins]
 features = ["mem"]

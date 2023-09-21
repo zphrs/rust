@@ -317,7 +317,8 @@ impl Step for Llvm {
         cfg.out_dir(&out_dir)
             .profile(profile)
             .define("LLVM_ENABLE_ASSERTIONS", assertions)
-            .define("LLVM_UNREACHABLE_OPTIMIZE", "OFF")
+            // FIXME (dbittman): This breaks llvm. But why?
+            //.define("LLVM_UNREACHABLE_OPTIMIZE", "OFF")
             .define("LLVM_ENABLE_PLUGINS", plugins)
             .define("LLVM_TARGETS_TO_BUILD", llvm_targets)
             .define("LLVM_EXPERIMENTAL_TARGETS_TO_BUILD", llvm_exp_targets)
@@ -1191,6 +1192,10 @@ impl Step for CrtBeginEnd {
             .file(crtbegin_src)
             .file(crtend_src);
 
+        if self.target.contains("twizzler") {
+            cfg.flag("-nostdlibinc");
+        }
+
         // Those flags are defined in src/llvm-project/compiler-rt/lib/crt/CMakeLists.txt
         // Currently only consumer of those objects is musl, which use .init_array/.fini_array
         // instead of .ctors/.dtors
@@ -1300,7 +1305,7 @@ impl Step for Libunwind {
                 cfg.flag("-fno-stack-protector");
                 cfg.define("__ELF__", None);
                 cfg.define("NDEBUG", None);
-                cfg.define("_LIBUNWIND_NO_HEAP", None);                
+                cfg.define("_LIBUNWIND_NO_HEAP", None);
             }
             if self.target.contains("windows") {
                 cfg.define("_LIBUNWIND_HIDE_SYMBOLS", "1");

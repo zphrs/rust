@@ -1,4 +1,4 @@
-use crate::spec::{LinkerFlavor, StackProbeType, Target};
+use crate::spec::{Cc, LinkerFlavor, Lld, StackProbeType, Target};
 
 const LINKER_SCRIPT: &str = include_str!("./x86_64_unknown_twizzler_linker_script.ld");
 
@@ -11,10 +11,14 @@ pub fn target() -> Target {
     base.stack_probes = StackProbeType::Call;
     base.link_script = Some(LINKER_SCRIPT.into());
     base.pre_link_args
-        .get_mut(&LinkerFlavor::Gcc)
+        .get_mut(&LinkerFlavor::Gnu(Cc::Yes, Lld::Yes))
         .unwrap()
         .push("--target=x86_64-unknown-twizzler".into());
-
+    base.pre_link_args
+        .get_mut(&LinkerFlavor::Gnu(Cc::Yes, Lld::No))
+        .unwrap()
+        .push("--target=x86_64-unknown-twizzler".into());
+    
     Target {
         llvm_target: "x86_64-unknown-twizzler".into(),
         pointer_width: 64,

@@ -33,16 +33,16 @@
 [submodule "src/llvm-project"]
 	path = src/llvm-project
 	url = ../llvm-project.git
-	branch = twizzler2
+	branch = twizzler-dynlink
 [submodule "src/doc/embedded-book"]
 	path = src/doc/embedded-book
 	url = https://github.com/rust-embedded/book.git
 	shallow = true
-[submodule "library/backtrace"]
-	path = library/backtrace
-	url = ../backtrace-rs.git
-	branch = twizzler2
 [submodule "libc"]
 	path = libc
 	url = ../libc.git
+	branch = twizzler-dynlink
+[submodule "library/backtrace"]
+	path = library/backtrace
+	url = git@github.com:twizzler-operating-system/backtrace-rs.git
 	branch = twizzler-dynlink

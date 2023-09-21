@@ -1,15 +1,16 @@
 use crate::spec::{
-    crt_objects, LinkArgs, LinkOutputKind, LinkerFlavor, LldFlavor, PanicStrategy, TargetOptions,
+    crt_objects, Cc, LinkArgs, LinkOutputKind, LinkerFlavor, Lld, PanicStrategy, TargetOptions,
     TlsModel,
 };
 
 pub fn opts(static_only: bool) -> TargetOptions {
     let mut pre_link_args = LinkArgs::new();
-    pre_link_args.insert(LinkerFlavor::Gcc, vec![]);
+    pre_link_args.insert(LinkerFlavor::Gnu(Cc::Yes, Lld::Yes), vec![]);
+    pre_link_args.insert(LinkerFlavor::Gnu(Cc::Yes, Lld::No), vec![]);
 
     TargetOptions {
         os: "twizzler".into(),
-        linker_flavor: LinkerFlavor::Lld(LldFlavor::Ld),
+        linker_flavor: LinkerFlavor::Gnu(Cc::No, Lld::Yes),
         linker: Some("rust-lld".into()),
         executables: true,
         pre_link_args,

@@ -1,4 +1,4 @@
-use crate::spec::{LinkerFlavor, Target, TargetOptions};
+use crate::spec::{Cc, LinkerFlavor, Lld, Target, TargetOptions};
 
 const LINKER_SCRIPT: &str = include_str!("./aarch64_unknown_twizzler_linker_script.ld");
 
@@ -12,10 +12,14 @@ pub fn target() -> Target {
 
     let mut base = super::twizzler_base::opts(true);
     base.pre_link_args
-        .get_mut(&LinkerFlavor::Gcc)
+        .get_mut(&LinkerFlavor::Gnu(Cc::Yes, Lld::Yes))
         .unwrap()
         .push("--target=aarch64-unknown-twizzler".into());
-
+    base.pre_link_args
+        .get_mut(&LinkerFlavor::Gnu(Cc::Yes, Lld::No))
+        .unwrap()
+        .push("--target=aarch64-unknown-twizzler".into());
+    
     Target {
         llvm_target: "aarch64-unknown-twizzler".into(),
         pointer_width: 64,
