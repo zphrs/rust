@@ -15,7 +15,7 @@ impl Stdin {
 impl io::Read for Stdin {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         let runtime = twizzler_runtime_api::get_runtime();
-        runtime.with_stdin(&|stdin| stdin.read(buf)).map_err(|e| match e {
+        runtime.with_stdin(&mut |stdin| stdin.read(buf)).map_err(|e| match e {
             _ => const_io_error!(ErrorKind::Other, "unknown twizzler-runtime read error"),
         })
     }
