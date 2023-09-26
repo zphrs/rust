@@ -5,7 +5,6 @@ pub mod alloc;
 pub mod args;
 #[path = "../unix/cmath.rs"]
 pub mod cmath;
-//pub mod condvar;
 pub mod env;
 #[path = "../unsupported/fs.rs"]
 pub mod fs;
@@ -13,7 +12,6 @@ pub mod futex;
 #[path = "../unsupported/io.rs"]
 pub mod io;
 pub mod memchr;
-//pub mod mutex;
 #[path = "../unsupported/net.rs"]
 pub mod net;
 pub mod os;
@@ -25,7 +23,6 @@ pub mod path;
 pub mod pipe;
 #[path = "../unsupported/process.rs"]
 pub mod process;
-//pub mod rwlock;
 pub mod stdio;
 pub mod thread;
 pub mod thread_local_dtor;
@@ -33,6 +30,7 @@ pub mod thread_local_dtor;
 pub mod thread_local_key;
 pub mod time;
 
+// We can use unix locks by providing futex.
 #[path = "../unix/locks"]
 pub mod locks {
     mod futex_condvar;
