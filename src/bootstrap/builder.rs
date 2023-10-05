@@ -1643,6 +1643,7 @@ impl<'a> Builder<'a> {
             } else if !target.contains("windows")
                 && !target.contains("aix")
                 && !target.contains("xous")
+                && !target.contains("twizzler")
             {
                 rustflags.arg("-Clink-args=-Wl,-z,origin");
                 Some(format!("-Wl,-rpath,$ORIGIN/../{libdir}"))

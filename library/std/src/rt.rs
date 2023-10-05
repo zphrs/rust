@@ -170,3 +170,22 @@ fn lang_start<T: crate::process::Termination + 'static>(
     );
     v
 }
+
+#[cfg(target_os = "twizzler")]
+#[no_mangle]
+#[unstable(feature = "none", issue = "none", reason = "none")]
+#[allow(improper_ctypes_definitions)]
+pub extern "C" fn twizzler_call_lang_start(
+    main: fn(),
+    argc: isize,
+    argv: *const *const u8,
+    sigpipe: u8,
+) -> isize {
+    lang_start(main, argc, argv, sigpipe)
+}
+
+#[cfg(target_os = "twizzler")]
+#[used]
+#[allow(improper_ctypes_definitions)]
+static USE_MARKER: extern "C" fn(fn(), isize, *const *const u8, u8) -> isize =
+    twizzler_call_lang_start;
