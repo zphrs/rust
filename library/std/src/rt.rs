@@ -15,6 +15,7 @@
 #![doc(hidden)]
 #![deny(unsafe_op_in_unsafe_fn)]
 #![allow(unused_macros)]
+#![allow(unexpected_cfgs)]
 
 use crate::ffi::CString;
 
@@ -171,7 +172,10 @@ fn lang_start<T: crate::process::Termination + 'static>(
     v
 }
 
-#[cfg(target_os = "twizzler")]
+// TODO(dbittman): Need to get rid of this once we solve the lang_item start problem.
+// but this is future work.
+cfg_if::cfg_if! {
+if #[cfg(target_os = "twizzler")] {
 #[no_mangle]
 #[unstable(feature = "none", issue = "none", reason = "none")]
 #[allow(improper_ctypes_definitions)]
@@ -184,8 +188,10 @@ pub extern "C" fn twizzler_call_lang_start(
     lang_start(main, argc, argv, sigpipe)
 }
 
-#[cfg(target_os = "twizzler")]
 #[used]
 #[allow(improper_ctypes_definitions)]
 static USE_MARKER: extern "C" fn(fn(), isize, *const *const u8, u8) -> isize =
     twizzler_call_lang_start;
+
+}
+}
