@@ -11,8 +11,16 @@ ENTRY(_start)
 MAX_OBJECT_SIZE = 1024 * 1024 * 1024; /* 0x40000000 */
 NULLPAGE_SIZE = 0x1000;
 
-text_begin = DEFINED(override_text_begin) ? override_text_begin : NULLPAGE_SIZE;
+/* We start the text segment after MAXPAGESIZE which is 64K for aarch64.
+   This is necessary since sections are aligned to MAXPAGESIZE. Starting the
+   text segment at the canonical NULLPAGE_SIZE results in a section being aligned
+   to address 0. This is bad because when the ELF is loaded, and memory is dereferenced
+   we experience a NULLPAGE fault. So the workaround is to start the text segment
+   at or after MAXPAGESIZE. */
+text_begin = DEFINED(override_text_begin) ? override_text_begin : CONSTANT(MAXPAGESIZE);
+/* This segment also gets aligned up due to DATA_SEGMENT_ALIGN directive */
 data_begin = DEFINED(override_data_begin) ? override_data_begin : MAX_OBJECT_SIZE + NULLPAGE_SIZE;
+
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
