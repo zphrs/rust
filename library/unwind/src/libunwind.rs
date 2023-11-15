@@ -195,7 +195,7 @@ if #[cfg(any(target_os = "ios", target_os = "tvos", target_os = "watchos", targe
     pub const UNWIND_IP_REG: c_int = 15;
 
     #[cfg_attr(
-        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux")),
+        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux", target_os = "twizzler")),
         link(name = "unwind", kind = "static", modifiers = "-bundle")
     )]
     extern "C" {
@@ -268,7 +268,7 @@ if #[cfg(not(all(target_os = "ios", target_arch = "arm")))] {
         pub fn _Unwind_RaiseException(exception: *mut _Unwind_Exception) -> _Unwind_Reason_Code;
     }
     #[cfg_attr(
-        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux")),
+        all(feature = "llvm-libunwind", any(target_os = "fuchsia", target_os = "linux", target_os = "twizzler")),
         link(name = "unwind", kind = "static", modifiers = "-bundle")
     )]
     extern "C" {

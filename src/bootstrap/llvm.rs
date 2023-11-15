@@ -1290,7 +1290,9 @@ impl Step for Libunwind {
                 cfg.define("NDEBUG", None);
             } else if self.target.contains("twizzler") {
                 cfg.static_flag(true);
-                cfg.define("_LIBUNWIND_IS_BAREMETAL", None);
+                if self.target.contains("minruntime") {
+                    cfg.define("_LIBUNWIND_IS_BAREMETAL", None);
+                }
                 cfg.define("_LIBUNWIND_HAS_NO_THREADS", None);
                 cfg.define("_LIBUNWIND_REMEMBER_STACK_ALLOC", None);
                 // FIXME (dbittman): This is a hack to get bootstrap headers included when compiling libunwind.
@@ -1306,6 +1308,7 @@ impl Step for Libunwind {
                 cfg.define("__ELF__", None);
                 cfg.define("NDEBUG", None);
                 cfg.define("_LIBUNWIND_NO_HEAP", None);
+                cfg.define("_LIBUNWIND_USE_DLADDR", Some("0"));
             }
             if self.target.contains("windows") {
                 cfg.define("_LIBUNWIND_HIDE_SYMBOLS", "1");

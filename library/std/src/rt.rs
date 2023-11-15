@@ -185,7 +185,7 @@ pub extern "C" fn twizzler_call_lang_start(
     argv: *const *const u8,
     sigpipe: u8,
 ) -> isize {
-    lang_start(main, argc, argv, sigpipe)
+    crate::panic::catch_unwind(|| lang_start(main, argc, argv, sigpipe)).unwrap_or(101)
 }
 
 #[used]
