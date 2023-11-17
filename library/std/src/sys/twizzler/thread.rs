@@ -57,7 +57,7 @@ impl Thread {
 
     pub fn join(self) {
         let runtime = twizzler_runtime_api::get_runtime();
-        runtime.join(self.internal_id, None).unwrap();
+        let _ = runtime.join(self.internal_id, None);
     }
 
     #[allow(dead_code)]
