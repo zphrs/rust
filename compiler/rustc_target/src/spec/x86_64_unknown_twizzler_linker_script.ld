@@ -68,6 +68,10 @@ SECTIONS
     /* .gnu.warning sections are handled specially by elf32.em.  */
     *(.gnu.warning)
   }
+  . = ALIGN(128);
+  .twz_secgate_text : {
+    KEEP(*(.twz_secgate_text))
+  }
   .fini           :
   {
     KEEP (*(SORT_NONE(.fini)))
@@ -80,6 +84,10 @@ SECTIONS
   /*.eh_frame_hdr : { *(.eh_frame_hdr) }
   .eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
   */
+
+  .twz_secgate_info : {
+    KEEP(*(.twz_secgate_info))
+  }
 
    .eh_frame :
    {
