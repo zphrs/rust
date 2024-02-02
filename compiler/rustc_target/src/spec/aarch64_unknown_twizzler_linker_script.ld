@@ -17,9 +17,9 @@ NULLPAGE_SIZE = 0x1000;
    to address 0. This is bad because when the ELF is loaded, and memory is dereferenced
    we experience a NULLPAGE fault. So the workaround is to start the text segment
    at or after MAXPAGESIZE. */
-text_begin = DEFINED(override_text_begin) ? override_text_begin : CONSTANT(MAXPAGESIZE);
+text_begin = CONSTANT(MAXPAGESIZE);
 /* This segment also gets aligned up due to DATA_SEGMENT_ALIGN directive */
-data_begin = DEFINED(override_data_begin) ? override_data_begin : MAX_OBJECT_SIZE + NULLPAGE_SIZE;
+data_begin = MAX_OBJECT_SIZE + NULLPAGE_SIZE;
 
 SECTIONS
 {

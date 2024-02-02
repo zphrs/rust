@@ -11,8 +11,8 @@ ENTRY(_start)
 MAX_OBJECT_SIZE = 1024 * 1024 * 1024; /* 0x40000000 */
 NULLPAGE_SIZE = 0x1000;
 
-text_begin = DEFINED(override_text_begin) ? override_text_begin : NULLPAGE_SIZE ;
-data_begin = DEFINED(override_data_begin) ? override_data_begin : MAX_OBJECT_SIZE + NULLPAGE_SIZE ;
+text_begin = NULLPAGE_SIZE ;
+data_begin = MAX_OBJECT_SIZE + NULLPAGE_SIZE ;
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
@@ -85,9 +85,6 @@ SECTIONS
   .eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
   */
 
-  .twz_secgate_info : {
-    KEEP(*(.twz_secgate_info))
-  }
 
    .eh_frame :
    {
@@ -183,6 +180,11 @@ SECTIONS
     SORT(CONSTRUCTORS)
   }
   .data1          : { *(.data1) }
+
+  .twz_secgate_info : {
+    KEEP(*(.twz_secgate_info))
+  }
+
   _edata = .; PROVIDE (edata = .);
   . = .;
   __bss_start = .;
