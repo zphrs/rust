@@ -10,6 +10,7 @@ pub fn opts(static_only: bool) -> TargetOptions {
 
     TargetOptions {
         os: "twizzler".into(),
+        env: if static_only { "minruntime".into() } else { "".into() },
         linker_flavor: LinkerFlavor::Gnu(Cc::No, Lld::Yes),
         linker: Some("rust-lld".into()),
         executables: true,

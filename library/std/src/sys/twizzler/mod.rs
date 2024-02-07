@@ -118,7 +118,6 @@ pub unsafe extern "C" fn std_entry_from_runtime(
 
     crate::sys::os::init_environment(aux.env);
     let runtime = twizzler_runtime_api::get_runtime();
-
     runtime.pre_main_hook();
 
     let code = main(aux.argc as isize, aux.args);
@@ -127,4 +126,17 @@ pub unsafe extern "C" fn std_entry_from_runtime(
     runtime.post_main_hook();
 
     twizzler_runtime_api::BasicReturn { code }
+}
+
+// When in minruntime, we expect this symbol to be provided by twizzler-abi, and we further require
+// applications for minruntime to link explicitly to a provider of this symbol. For reference runtime,
+// we need to provide this for binaries to link properly. The loader will ensure the correct definition
+// is used because we mark this as weak. The provider (twz_rt) exports this as a strong (normal) symbol.
+#[cfg(not(target_env = "minruntime"))]
+pub mod __runtime_fallback_imp {
+    #[linkage = "weak"]
+    #[no_mangle]
+    pub unsafe extern "C" fn __twz_get_runtime() {
+        core::intrinsics::abort()
+    }
 }
