@@ -121,10 +121,9 @@ pub unsafe extern "C" fn std_entry_from_runtime(
     runtime.pre_main_hook();
 
     let code = main(aux.argc as isize, aux.args);
-    thread_local_dtor::run_dtors();
-
     runtime.post_main_hook();
 
+    thread_local_dtor::run_dtors();
     twizzler_runtime_api::BasicReturn { code }
 }
 
