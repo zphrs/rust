@@ -6,7 +6,8 @@ pub mod args;
 #[path = "../unix/cmath.rs"]
 pub mod cmath;
 pub mod env;
-#[path = "../unsupported/fs.rs"]
+//#[path = "../unsupported/fs.rs"]
+pub mod fd;
 pub mod fs;
 pub mod futex;
 #[path = "../unsupported/io.rs"]
