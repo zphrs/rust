@@ -225,10 +225,10 @@ impl File {
     pub fn open_c(path: &CStr, opts: &OpenOptions) -> io::Result<File> {
         println!("opening 1");
         let runtime = twizzler_runtime_api::get_runtime();
-        let fd = runtime.open(path);
+        let fd = runtime.open(path)?;
 
         Ok(File(FileDesc {
-            fd: fd.unwrap()
+            fd: fd
         }))
     }
 

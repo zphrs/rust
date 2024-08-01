@@ -1,25 +1,38 @@
-use crate::io::{self, Read, SeekFrom};
+use crate::io::{self, Read, SeekFrom, Error, ErrorKind};
 use crate::io::SeekFrom::{Start, Current, End};
 
 use crate::sys::unsupported;
-use twizzler_runtime_api::OwnedFd;
+use twizzler_runtime_api::RawFd;
 use crate::sys_common::IntoInner;
 use crate::sys_common::FromInner;
 
 use twizzler_runtime_api::SeekFrom as InnerSeek;
 use twizzler_runtime_api::SeekFrom::{Start as InnerStart, Current as InnerCurrent, End as InnerEnd};
+use twizzler_runtime_api::FsError;
+
+#[stable(feature = "FsError Conversion", since = "0.1.0")]
+impl core::convert::From<FsError> for io::Error {
+    fn from(error: FsError) -> io::Error {
+        match error {
+            FsError::Other => io::Error::new(io::ErrorKind::Other, "unknown error"),
+            FsError::InvalidPath => io::Error::from(ErrorKind::NotFound),
+            FsError::LookupError => io::Error::new(ErrorKind::Other, "File Descriptor not found"),
+            FsError::SeekError => io::Error::from(ErrorKind::UnexpectedEof),
+        }
+    }
+}
 
 // A abstraction that can do continious IO on a set of Twizzler objects
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd, Ord, Eq, Hash)]
 pub struct FileDesc {
-    pub fd: OwnedFd
+    pub fd: RawFd
 }
 
 impl FileDesc {
     pub fn read(&self, buf: &mut [u8]) -> io::Result<usize> {
         let runtime = twizzler_runtime_api::get_runtime();
 
-        let result = runtime.read(self.fd, buf.as_mut_ptr(), buf.len()).expect("Read");
+        let result = runtime.read(self.fd, buf)?;
 
         Ok(result as usize)
     }
@@ -32,7 +45,7 @@ impl FileDesc {
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
         let runtime = twizzler_runtime_api::get_runtime();
 
-        let result = runtime.write(self.fd, buf.as_ptr(), buf.len()).expect("Write");
+        let result = runtime.write(self.fd, buf)?;
         
         Ok(result as usize)
     }
@@ -46,7 +59,7 @@ impl FileDesc {
             Current(x) => InnerSeek::Current(x),
         };
 
-        let result = runtime.seek(self.fd, inner).expect("Seek");
+        let result = runtime.seek(self.fd, inner)?;
 
         Ok(result as u64)
     }
@@ -54,6 +67,7 @@ impl FileDesc {
     pub fn duplicate(&self) -> io::Result<FileDesc> {
         self.duplicate_path(&[])
     }
+
     pub fn duplicate_path(&self, _path: &[u8]) -> io::Result<FileDesc> {
         unsupported()
     }
@@ -71,14 +85,14 @@ impl FileDesc {
     }
 }
 
-impl IntoInner<OwnedFd> for FileDesc {
-    fn into_inner(self) -> OwnedFd {
+impl IntoInner<RawFd> for FileDesc {
+    fn into_inner(self) -> RawFd {
         self.fd
     }
 }
 
-impl FromInner<OwnedFd> for FileDesc {
-    fn from_inner(owned_fd: OwnedFd) -> Self {
+impl FromInner<RawFd> for FileDesc {
+    fn from_inner(owned_fd: RawFd) -> Self {
         Self { fd: owned_fd }
     }
 }
