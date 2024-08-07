@@ -223,7 +223,6 @@ impl File {
     }
 
     pub fn open_c(path: &CStr, opts: &OpenOptions) -> io::Result<File> {
-        println!("opening 1");
         let runtime = twizzler_runtime_api::get_runtime();
         let fd = runtime.open(path)?;
 
@@ -299,7 +298,6 @@ impl File {
 
 impl DirBuilder {
     pub fn new() -> DirBuilder {
-        println!("Inited DirBuilder! :)");
         DirBuilder {}
     }
 
@@ -310,7 +308,7 @@ impl DirBuilder {
 
 impl fmt::Debug for File {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "No")
+        write!(f, "{}", self.0)
     }
 }
 

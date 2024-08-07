@@ -26,7 +26,7 @@ impl FileDesc {
     }
 
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
-        let result = cvt(unsafe { abi::write(self.fd.as_raw_fd(), buf.as_mut_ptr(), buf.len()) })?;
+        let result = cvt(unsafe { abi::write(self.fd.as_raw_fd(), buf.as_ptr(), buf.len()) })?;
         Ok(result as usize)
     }
 
