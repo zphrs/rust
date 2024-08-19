@@ -18,7 +18,7 @@ panic_unwind = { path = "../panic_unwind", optional = true }
 panic_abort = { path = "../panic_abort" }
 core = { path = "../core", public = true }
 libc = { version = "0.2.148", default-features = false, features = ['rustc-dep-of-std'], public = true }
-compiler_builtins = { version = "0.1.100" }
+compiler_builtins = { version = "0.1.110" }
 profiler_builtins = { path = "../profiler_builtins", optional = true }
 unwind = { path = "../unwind" }
 hashbrown = { version = "0.14", default-features = false, features = ['rustc-dep-of-std'] }
@@ -49,8 +49,10 @@ hermit-abi = { version = "0.3.2", features = ['rustc-dep-of-std'], public = true
 twizzler-runtime-api = { path = "../twizzler-runtime-api", features = ["rustc-dep-of-std"] }
 
 [target.'cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "twizzler"))'.dependencies.compiler_builtins]
-features = ["mem"]
-version = "0.1.71"
+# TODO (dbittman): one of the features is "c", which enables optimized c impls for some builtins. But when I enable it,
+# we end up with things getting recompiled too often. Something to look into.
+features = ["mem", "no-f16-f128"]
+version = "=0.1.110"
 
 [target.wasm32-wasi.dependencies]
 wasi = { version = "0.11.0", features = ['rustc-dep-of-std'], default-features = false }
@@ -70,7 +72,6 @@ compiler-builtins-c = ["alloc/compiler-builtins-c"]
 compiler-builtins-mem = ["alloc/compiler-builtins-mem"]
 compiler-builtins-no-asm = ["alloc/compiler-builtins-no-asm"]
 compiler-builtins-mangled-names = ["alloc/compiler-builtins-mangled-names"]
-compiler-builtins-weak-intrinsics = ["alloc/compiler-builtins-weak-intrinsics"]
 llvm-libunwind = ["unwind/llvm-libunwind"]
 system-llvm-libunwind = ["unwind/system-llvm-libunwind"]
 

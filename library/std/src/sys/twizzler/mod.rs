@@ -64,7 +64,7 @@ pub unsafe fn strlen(start: *const c_char) -> usize {
 
 #[no_mangle]
 pub extern "C" fn floor(x: f64) -> f64 {
-    unsafe { intrinsics::floorf64(x) }
+    unsafe { compiler_builtins::math::floor(x) }
 }
 
 #[inline]
