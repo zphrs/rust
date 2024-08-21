@@ -67,6 +67,16 @@ pub extern "C" fn floor(x: f64) -> f64 {
     unsafe { compiler_builtins::math::floor(x) }
 }
 
+#[no_mangle]
+pub extern "C" fn ceil(x: f64) -> f64 {
+    unsafe { compiler_builtins::math::ceil(x) }
+}
+
+#[no_mangle]
+pub extern "C" fn log2(x: f64) -> f64 {
+    unsafe { compiler_builtins::math::log2(x) }
+}
+
 #[inline]
 pub fn abort_internal() -> ! {
     let runtime = twizzler_runtime_api::get_runtime();
