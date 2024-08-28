@@ -3,13 +3,16 @@ use crate::fmt;
 use crate::hash::{Hash, Hasher};
 use crate::collections::hash_map::DefaultHasher;
 use crate::io::{self, BorrowedCursor, IoSlice, IoSliceMut, SeekFrom, Error};
+use crate::os::twizzler::io::{AsFd, AsRawFd, BorrowedFd, FromRawFd, IntoRawFd, RawFd};
 use crate::sys::common::small_c_string::run_path_with_cstr;
 use crate::path::{Path, PathBuf};
 use crate::sys::time::SystemTime;
 use crate::sys::unsupported;
 use core::ffi::CStr;
 use crate::sys::fd::FileDesc;
+use crate::sys_common::{AsInner, AsInnerMut, FromInner, IntoInner};
 
+#[derive(Debug)]
 pub struct File(FileDesc);
 
 pub struct FileAttr(!);
@@ -226,9 +229,7 @@ impl File {
         let runtime = twizzler_runtime_api::get_runtime();
         let fd = runtime.open(path)?;
 
-        Ok(File(FileDesc {
-            fd: fd
-        }))
+        Ok(File(unsafe { FileDesc::from_raw_fd(fd) }))
     }
 
     pub fn file_attr(&self) -> io::Result<FileAttr> {
@@ -306,12 +307,6 @@ impl DirBuilder {
     }
 }
 
-impl fmt::Debug for File {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
 pub fn readdir(_p: &Path) -> io::Result<ReadDir> {
     unsupported()
 }
@@ -366,4 +361,55 @@ pub fn canonicalize(_p: &Path) -> io::Result<PathBuf> {
 
 pub fn copy(_from: &Path, _to: &Path) -> io::Result<u64> {
     unsupported()
+}
+
+impl AsInner<FileDesc> for File {
+    #[inline]
+    fn as_inner(&self) -> &FileDesc {
+        &self.0
+    }
+}
+
+impl AsInnerMut<FileDesc> for File {
+    #[inline]
+    fn as_inner_mut(&mut self) -> &mut FileDesc {
+        &mut self.0
+    }
+}
+
+impl IntoInner<FileDesc> for File {
+    fn into_inner(self) -> FileDesc {
+        self.0
+    }
+}
+
+impl FromInner<FileDesc> for File {
+    fn from_inner(file_desc: FileDesc) -> Self {
+        Self(file_desc)
+    }
+}
+
+impl AsFd for File {
+    fn as_fd(&self) -> BorrowedFd<'_> {
+        self.0.as_fd()
+    }
+}
+
+impl AsRawFd for File {
+    #[inline]
+    fn as_raw_fd(&self) -> RawFd {
+        self.0.as_raw_fd()
+    }
+}
+
+impl IntoRawFd for File {
+    fn into_raw_fd(self) -> RawFd {
+        self.0.into_raw_fd()
+    }
+}
+
+impl FromRawFd for File {
+    unsafe fn from_raw_fd(raw_fd: RawFd) -> Self {
+        Self(FromRawFd::from_raw_fd(raw_fd))
+    }
 }

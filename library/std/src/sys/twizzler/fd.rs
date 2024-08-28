@@ -1,10 +1,11 @@
+#![unstable(reason = "not public", issue = "none", feature = "fd")]
+
 use crate::io::{self, Read, SeekFrom, Error, ErrorKind};
 use crate::io::SeekFrom::{Start, Current, End};
 
 use crate::sys::unsupported;
-use twizzler_runtime_api::RawFd;
-use crate::sys_common::IntoInner;
-use crate::sys_common::FromInner;
+use crate::os::twizzler::io::{FromRawFd, OwnedFd, RawFd, AsRawFd, IntoRawFd, AsFd, BorrowedFd};
+use crate::sys_common::{AsInner, FromInner, IntoInner};
 
 use twizzler_runtime_api::SeekFrom as InnerSeek;
 use twizzler_runtime_api::SeekFrom::{Start as InnerStart, Current as InnerCurrent, End as InnerEnd};
@@ -23,16 +24,16 @@ impl core::convert::From<FsError> for io::Error {
 }
 
 // A abstraction that can do continious IO on a set of Twizzler objects
-#[derive(Debug, Copy, Clone, PartialEq, PartialOrd, Ord, Eq, Hash)]
+#[derive(Debug)]
 pub struct FileDesc {
-    pub fd: RawFd
+    pub fd: OwnedFd
 }
 
 impl FileDesc {
     pub fn read(&self, buf: &mut [u8]) -> io::Result<usize> {
         let runtime = twizzler_runtime_api::get_runtime();
 
-        let result = runtime.read(self.fd, buf)?;
+        let result = runtime.read(self.fd.as_raw_fd(), buf)?;
 
         Ok(result as usize)
     }
@@ -45,7 +46,7 @@ impl FileDesc {
     pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
         let runtime = twizzler_runtime_api::get_runtime();
 
-        let result = runtime.write(self.fd, buf)?;
+        let result = runtime.write(self.fd.as_raw_fd(), buf)?;
         
         Ok(result as usize)
     }
@@ -58,8 +59,8 @@ impl FileDesc {
             End(x) => InnerSeek::End(x),
             Current(x) => InnerSeek::Current(x),
         };
-
-        let result = runtime.seek(self.fd, inner)?;
+        
+        let result = runtime.seek(self.fd.as_raw_fd(), inner)?;
 
         Ok(result as u64)
     }
@@ -85,20 +86,53 @@ impl FileDesc {
     }
 }
 
-impl IntoInner<RawFd> for FileDesc {
-    fn into_inner(self) -> RawFd {
+
+impl<'a> Read for &'a FileDesc {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        (**self).read(buf)
+    }
+}
+
+impl IntoInner<OwnedFd> for FileDesc {
+    fn into_inner(self) -> OwnedFd {
         self.fd
     }
 }
 
-impl FromInner<RawFd> for FileDesc {
-    fn from_inner(owned_fd: RawFd) -> Self {
+impl FromInner<OwnedFd> for FileDesc {
+    fn from_inner(owned_fd: OwnedFd) -> Self {
         Self { fd: owned_fd }
     }
 }
 
-impl core::fmt::Display for FileDesc {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "FileDesc({:x})", self.fd)
+impl FromRawFd for FileDesc {
+    unsafe fn from_raw_fd(raw_fd: RawFd) -> Self {
+        Self { fd: FromRawFd::from_raw_fd(raw_fd) }
+    }
+}
+
+impl AsInner<OwnedFd> for FileDesc {
+    #[inline]
+    fn as_inner(&self) -> &OwnedFd {
+        &self.fd
+    }
+}
+
+impl AsFd for FileDesc {
+    fn as_fd(&self) -> BorrowedFd<'_> {
+        self.fd.as_fd()
+    }
+}
+
+impl AsRawFd for FileDesc {
+    #[inline]
+    fn as_raw_fd(&self) -> RawFd {
+        self.fd.as_raw_fd()
+    }
+}
+
+impl IntoRawFd for FileDesc {
+    fn into_raw_fd(self) -> RawFd {
+        self.fd.into_raw_fd()
     }
 }
