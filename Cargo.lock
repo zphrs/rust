@@ -6351,3 +6351,7 @@ dependencies = [
  "quote",
  "syn 2.0.79",
 ]
+
+[[patch.unused]]
+name = "libc"
+version = "0.2.151"
