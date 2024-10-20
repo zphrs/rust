@@ -6,7 +6,7 @@
 use super::raw::{AsRawFd, FromRawFd, IntoRawFd, RawFd};
 use crate::marker::PhantomData;
 use crate::mem::ManuallyDrop;
-#[cfg(not(any(target_arch = "wasm32", target_env = "sgx", target_os = "hermit")))]
+#[cfg(not(any(target_arch = "wasm32", target_env = "sgx", target_os = "hermit", target_os = "twizzler")))]
 use crate::sys::cvt;
 use crate::sys_common::{AsInner, FromInner, IntoInner};
 use crate::{fmt, fs, io};
@@ -96,7 +96,7 @@ impl OwnedFd {
 impl BorrowedFd<'_> {
     /// Creates a new `OwnedFd` instance that shares the same underlying file
     /// description as the existing `BorrowedFd` instance.
-    #[cfg(not(any(target_arch = "wasm32", target_os = "hermit")))]
+    #[cfg(not(any(target_arch = "wasm32", target_os = "hermit", target_os = "twizzler")))]
     #[stable(feature = "io_safety", since = "1.63.0")]
     pub fn try_clone_to_owned(&self) -> crate::io::Result<OwnedFd> {
         // We want to atomically duplicate this file descriptor and set the
@@ -123,6 +123,16 @@ impl BorrowedFd<'_> {
     #[stable(feature = "io_safety", since = "1.63.0")]
     pub fn try_clone_to_owned(&self) -> crate::io::Result<OwnedFd> {
         Err(crate::io::Error::UNSUPPORTED_PLATFORM)
+    }
+
+    /// Creates a new `OwnedFd` instance that shares the same underlying file
+    /// description as the existing `BorrowedFd` instance.
+    #[cfg(target_os = "twizzler")]
+    #[stable(feature = "io_safety", since = "1.63.0")]
+    pub fn try_clone_to_owned(&self) -> crate::io::Result<OwnedFd> {
+        twizzler_runtime_api::get_runtime().dup(self.as_raw_fd(), twizzler_runtime_api::DupFlags::empty())
+            .map(|fd| unsafe { OwnedFd::from_raw_fd(fd) })
+            .map_err(|e| e.into())
     }
 }
 
@@ -172,6 +182,7 @@ impl FromRawFd for OwnedFd {
 impl Drop for OwnedFd {
     #[inline]
     fn drop(&mut self) {
+        #[cfg(not(target_os = "twizzler"))]
         unsafe {
             // Note that errors are ignored when closing a file descriptor. The
             // reason for this is that if an error occurs we don't actually know if
@@ -183,7 +194,7 @@ impl Drop for OwnedFd {
             // and the scenario is rare to begin with.
             // Helpful link to an epic discussion by POSIX workgroup:
             // http://austingroupbugs.net/view.php?id=529
-            #[cfg(not(target_os = "hermit"))]
+            #[cfg(not(any(target_os = "hermit")))]
             {
                 #[cfg(unix)]
                 crate::sys::fs::debug_assert_fd_is_open(self.fd);
@@ -193,6 +204,8 @@ impl Drop for OwnedFd {
             #[cfg(target_os = "hermit")]
             let _ = hermit_abi::close(self.fd);
         }
+        #[cfg(target_os = "twizzler")]
+        let _ = twizzler_runtime_api::get_runtime().close(self.fd);
     }
 }
 

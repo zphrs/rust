@@ -2615,7 +2615,7 @@ impl Cargo {
                 // flesh out rpath support more fully in the future.
                 self.rustflags.arg("-Zosx-rpath-install-name");
                 Some(format!("-Wl,-rpath,@loader_path/../{libdir}"))
-            } else if !target.is_windows() && !target.contains("aix") && !target.contains("xous") {
+            } else if !target.is_windows() && !target.contains("aix") && !target.contains("xous") && !target.contains("twizzler") {
                 self.rustflags.arg("-Clink-args=-Wl,-z,origin");
                 Some(format!("-Wl,-rpath,$ORIGIN/../{libdir}"))
             } else {

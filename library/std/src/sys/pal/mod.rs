@@ -58,6 +58,9 @@ cfg_if::cfg_if! {
     } else if #[cfg(target_os = "teeos")] {
         mod teeos;
         pub use self::teeos::*;
+    } else if #[cfg(target_os = "twizzler")] {
+        mod twizzler;
+        pub use self::twizzler::*;
     } else if #[cfg(target_os = "zkvm")] {
         mod zkvm;
         pub use self::zkvm::*;

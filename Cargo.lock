@@ -1959,8 +1959,6 @@ checksum = "baff4b617f7df3d896f97fe922b64817f6cd9a756bb81d40f8883f2f66dcb401"
 [[package]]
 name = "libc"
 version = "0.2.159"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "561d97a539a36e26a9a5fad1ea11a3039a67714694aaa379433e580854bc3dc5"
 
 [[package]]
 name = "libdbus-sys"
@@ -6351,7 +6349,3 @@ dependencies = [
  "quote",
  "syn 2.0.79",
 ]
-
-[[patch.unused]]
-name = "libc"
-version = "0.2.151"

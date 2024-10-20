@@ -9,6 +9,8 @@
     feature(simd_wasm64, wasm_exception_handling_intrinsics)
 )]
 #![allow(internal_features)]
+// TODO (twizzler): remove this once the bootstrap compiler recognizes twizzler.
+#![allow(unexpected_cfgs)]
 
 // Force libc to be included even if unused. This is required by many platforms.
 #[cfg(not(all(windows, target_env = "msvc")))]
@@ -30,6 +32,7 @@ cfg_if::cfg_if! {
         windows,
         target_os = "psp",
         target_os = "solid_asp3",
+        target_os = "twizzler",
         all(target_vendor = "fortanix", target_env = "sgx"),
     ))] {
         mod libunwind;

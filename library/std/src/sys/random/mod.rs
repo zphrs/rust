@@ -58,6 +58,9 @@ cfg_if::cfg_if! {
     } else if #[cfg(target_os = "teeos")] {
         mod teeos;
         pub use teeos::fill_bytes;
+    } else if #[cfg(target_os = "twizzler")] {
+        mod twizzler;
+        pub use twizzler::fill_bytes;
     } else if #[cfg(target_os = "uefi")] {
         mod uefi;
         pub use uefi::fill_bytes;
