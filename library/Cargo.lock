@@ -355,7 +355,7 @@ dependencies = [
  "rand_xorshift",
  "rustc-demangle",
  "std_detect",
- "twizzler-runtime-api",
+ "twizzler-rt-abi",
  "unwind",
  "wasi",
  "windows-targets 0.0.0",
@@ -392,8 +392,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "twizzler-runtime-api"
-version = "0.1.0"
+name = "twizzler-rt-abi"
+version = "0.99.0"
 dependencies = [
  "bitflags",
  "compiler_builtins",
