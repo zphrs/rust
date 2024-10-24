@@ -1,7 +1,13 @@
 use crate::io::{self, BorrowedCursor, IoSlice, IoSliceMut};
 use crate::mem::ManuallyDrop;
-use crate::os::unix::io::FromRawFd;
 use crate::sys::fd::FileDesc;
+
+#[cfg(unix)]
+use crate::os::unix::io::FromRawFd;
+
+#[cfg(target_os = "twizzler")]
+use crate::os::fd::FromRawFd;
+
 
 pub struct Stdin(());
 pub struct Stdout(());
@@ -88,6 +94,12 @@ impl io::Write for Stderr {
     }
 }
 
+#[cfg(target_os = "twizzler")]
+pub fn is_ebadf(_err: &io::Error) -> bool {
+    false
+}
+
+#[cfg(unix)]
 pub fn is_ebadf(err: &io::Error) -> bool {
     err.raw_os_error() == Some(libc::EBADF as i32)
 }
