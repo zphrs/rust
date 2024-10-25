@@ -92,4 +92,4 @@ codegen-units = 1
 # lto = true
 
 [patch.crates-io]
-libc = { path = "libc" }
+libc = { path = "library/libc" }
