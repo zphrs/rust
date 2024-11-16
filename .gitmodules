@@ -32,7 +32,7 @@
 	shallow = true
 [submodule "src/llvm-project"]
 	path = src/llvm-project
-	url = ../llvm-project.git
+	url = ../twizzler-operating-system/llvm-project.git
 	branch = twizzler-tcup2024
 	shallow = true
 [submodule "src/doc/embedded-book"]
@@ -41,7 +41,7 @@
 	shallow = true
 [submodule "library/backtrace"]
 	path = library/backtrace
-	url = ../backtrace-rs.git
+	url = ../twizzler-operating-system/backtrace-rs.git
 	branch = twizzler-tcup2024
 	shallow = true
 [submodule "src/tools/rustc-perf"]
@@ -58,5 +58,5 @@
 	shallow = true	
 [submodule "libc"]
 	path = library/libc
-	url = ../libc.git
+	url = ../../twizzler-operating-system/libc.git
 	branch = twizzler-tcup2024
